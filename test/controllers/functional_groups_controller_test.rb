@@ -24,9 +24,9 @@ class FunctionalGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show renders functional_group details and Generate Embedding button" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
-    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "National capital.", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.", themes: [ "heterocycle" ])
 
     get functional_group_url(functional_group)
 
@@ -38,9 +38,9 @@ class FunctionalGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show with Turbo-Frame cluster_modal renders modal partial" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
-    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "National capital.", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.", themes: [ "heterocycle" ])
 
     get functional_group_url(functional_group), headers: { "Turbo-Frame" => "cluster_modal" }
 
@@ -52,9 +52,9 @@ class FunctionalGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "generate_embedding enqueues GenerateEmbeddingJob and responds with turbo stream" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
-    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "National capital.", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.", themes: [ "heterocycle" ])
 
     assert_enqueued_with(job: GenerateEmbeddingJob, args: [ "FunctionalGroup", functional_group.id ]) do
       post generate_embedding_functional_group_url(functional_group), as: :turbo_stream
@@ -66,9 +66,9 @@ class FunctionalGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "generate_embedding enqueues GenerateEmbeddingJob and redirects for HTML requests" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
-    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "National capital.", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    functional_group = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.", themes: [ "heterocycle" ])
 
     assert_enqueued_with(job: GenerateEmbeddingJob, args: [ "FunctionalGroup", functional_group.id ]) do
       post generate_embedding_functional_group_url(functional_group)

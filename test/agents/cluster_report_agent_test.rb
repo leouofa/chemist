@@ -25,7 +25,7 @@ class ClusterReportAgentTest < ActiveSupport::TestCase
 
   test "create! sets prompt instructions and metadata correctly" do
     chat = ClusterReportAgent.create!(
-      snapshot_title: "Cities Level 5",
+      snapshot_title: "Functional Groups Level 5",
       target_type: "FunctionalGroup",
       level: 5,
       distance_threshold: 0.20,
@@ -36,7 +36,7 @@ class ClusterReportAgentTest < ActiveSupport::TestCase
 
     assert chat.persisted?
     system_message = chat.messages.find_by!(role: "system")
-    assert_includes system_message.content, "SNAPSHOT TITLE: Cities Level 5"
+    assert_includes system_message.content, "SNAPSHOT TITLE: Functional Groups Level 5"
     assert_includes system_message.content, "Sample digest content"
     assert_includes system_message.content, "expert chemist, chemoinformatician"
   end

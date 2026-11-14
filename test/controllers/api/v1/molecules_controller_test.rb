@@ -2,17 +2,17 @@
 
 require "test_helper"
 
-class Api::V1::CountriesControllerTest < ActionDispatch::IntegrationTest
+class Api::V1::MoleculesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloid chemical class.")
     @vector_a = Array.new(1024) { |i| i == 0 ? 1.0 : 0.0 }
     @vector_b = Array.new(1024) { |i| i == 0 ? 0.99 : 0.01 }
 
     @molecule = Molecule.create!(
       chemical_class: @chemical_class,
       name: "Quinine",
-      description: "Western Alkaloidsan republic.",
-      themes: [ "republic", "nuclear", "diplomacy" ],
+      description: "Natural antimalarial alkaloid compound.",
+      themes: [ "alkaloid", "antimalarial", "heterocycle" ],
       embedding: @vector_a,
       embedding_model: "qwen3-embedding:0.6b",
       embedded_at: Time.current
@@ -20,7 +20,7 @@ class Api::V1::CountriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /api/v1/molecules returns list with filtering" do
-    get api_v1_molecules_url, params: { chemical_class_id: @chemical_class.id, theme: "nuclear" }, as: :json
+    get api_v1_molecules_url, params: { chemical_class_id: @chemical_class.id, theme: "antimalarial" }, as: :json
     assert_response :success
 
     json = response.parsed_body
@@ -53,8 +53,8 @@ class Api::V1::CountriesControllerTest < ActionDispatch::IntegrationTest
         molecule: {
           chemical_class_id: @chemical_class.id,
           name: "Morphine",
-          description: "Central Alkaloidsan federal state.",
-          themes: [ "federal", "manufacturing" ]
+          description: "Opioid analgesic alkaloid.",
+          themes: [ "analgesic", "opioid" ]
         }
       }, as: :json
     end
@@ -79,9 +79,9 @@ class Api::V1::CountriesControllerTest < ActionDispatch::IntegrationTest
   test "GET /api/v1/molecules/:id/neighbors finds nearest molecules" do
     other = Molecule.create!(
       chemical_class: @chemical_class,
-      name: "United Kingdom",
-      description: "Island monarchy.",
-      themes: [ "monarchy", "maritime" ],
+      name: "Cinchonine",
+      description: "Stereoisomeric alkaloid of quinine.",
+      themes: [ "alkaloid", "stereoisomer" ],
       embedding: @vector_b,
       embedding_model: "qwen3-embedding:0.6b",
       embedded_at: Time.current
@@ -92,7 +92,7 @@ class Api::V1::CountriesControllerTest < ActionDispatch::IntegrationTest
 
     json = response.parsed_body
     assert json["data"].is_a?(Array)
-    assert_equal "United Kingdom", json["data"].first["name"]
+    assert_equal "Cinchonine", json["data"].first["name"]
     assert json["data"].first["neighbor_distance"].present?
   end
 

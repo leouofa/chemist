@@ -25,19 +25,19 @@ class DeepSynthesisReportAgentTest < ActiveSupport::TestCase
 
   test "create! sets prompt instructions and aggregation digest correctly" do
     chat = DeepSynthesisReportAgent.create!(
-      snapshot_title: "Cities Level 5",
+      snapshot_title: "Functional Groups Level 5",
       target_type: "FunctionalGroup",
       level: 5,
       distance_threshold: 0.20,
       clusters_count: 10,
       items_count: 50,
-      sub_report_digest: "### Batch #1 (covers 5 clusters)\nCross-chemical_classal maritime hub patterns."
+      sub_report_digest: "### Batch #1 (covers 5 clusters)\nCross-class functional group reactivity patterns."
     )
 
     assert chat.persisted?
     system_message = chat.messages.find_by!(role: "system")
-    assert_includes system_message.content, "SNAPSHOT TITLE: Cities Level 5"
-    assert_includes system_message.content, "Cross-chemical_classal maritime hub patterns."
+    assert_includes system_message.content, "SNAPSHOT TITLE: Functional Groups Level 5"
+    assert_includes system_message.content, "Cross-class functional group reactivity patterns."
     assert_includes system_message.content, "expert chemist, chemoinformatician"
   end
 end

@@ -25,20 +25,20 @@ class ClusterBatchSummaryAgentTest < ActiveSupport::TestCase
 
   test "create! sets prompt instructions and batch context correctly" do
     chat = ClusterBatchSummaryAgent.create!(
-      report_prompt: "Find patterns in maritime gateway states",
-      snapshot_title: "Countries Snapshot",
+      report_prompt: "Find patterns in heterocyclic scaffolds",
+      snapshot_title: "Molecules Snapshot",
       target_type: "Molecule",
       batch_index: 2,
       total_batches: 4,
       cluster_count: 3,
-      batch_digest: "--- Cluster #4: \"Maritime Trade\" (3 members) ---\nUnited Kingdom, Caffeine, Singapore"
+      batch_digest: "--- Cluster #4: \"Purine Alkaloids\" (3 members) ---\nTheobromine, Caffeine, Theophylline"
     )
 
     assert chat.persisted?
     system_message = chat.messages.find_by!(role: "system")
-    assert_includes system_message.content, "Find patterns in maritime gateway states"
+    assert_includes system_message.content, "Find patterns in heterocyclic scaffolds"
     assert_includes system_message.content, "batch #2 of 4"
     assert_includes system_message.content, "3 archetype clusters"
-    assert_includes system_message.content, "United Kingdom, Caffeine, Singapore"
+    assert_includes system_message.content, "Theobromine, Caffeine, Theophylline"
   end
 end

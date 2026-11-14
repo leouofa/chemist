@@ -25,21 +25,21 @@ class ClusterGroupSummaryAgentTest < ActiveSupport::TestCase
 
   test "create! sets prompt instructions and untruncated member detail correctly" do
     chat = ClusterGroupSummaryAgent.create!(
-      report_prompt: "Find patterns in maritime gateway states",
-      snapshot_title: "Countries Snapshot",
+      report_prompt: "Find patterns in heterocyclic scaffolds",
+      snapshot_title: "Molecules Snapshot",
       target_type: "Molecule",
       cluster_rank: 1,
       total_clusters: 10,
-      cluster_name: "Maritime Trade and Naval Power",
-      cluster_size: 4,
-      shared_themes: [ "maritime trade", "naval power" ],
-      cluster_members_detail: "[1] United Kingdom (Alkaloids)\n[2] Caffeine (Terpenoids)\n[3] Singapore (Terpenoids)"
+      cluster_name: "Purine Alkaloids and Methylxanthines",
+      cluster_size: 3,
+      shared_themes: [ "purine", "xanthine" ],
+      cluster_members_detail: "[1] Caffeine (Alkaloids)\n[2] Theobromine (Alkaloids)\n[3] Theophylline (Alkaloids)"
     )
 
     assert chat.persisted?
     system_message = chat.messages.find_by!(role: "system")
-    assert_includes system_message.content, "Find patterns in maritime gateway states"
-    assert_includes system_message.content, "Maritime Trade and Naval Power"
-    assert_includes system_message.content, "[1] United Kingdom (Alkaloids)"
+    assert_includes system_message.content, "Find patterns in heterocyclic scaffolds"
+    assert_includes system_message.content, "Purine Alkaloids and Methylxanthines"
+    assert_includes system_message.content, "[1] Caffeine (Alkaloids)"
   end
 end

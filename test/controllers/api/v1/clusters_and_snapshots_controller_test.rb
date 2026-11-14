@@ -4,22 +4,22 @@ require "test_helper"
 
 class Api::V1::ClustersAndSnapshotsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     @vector_a = Array.new(1024) { |i| i == 0 ? 1.0 : 0.0 }
     @vector_b = Array.new(1024) { |i| i == 0 ? 0.99 : 0.01 }
 
-    @molecule_a = Molecule.create!(chemical_class: @chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid", themes: [ "republic" ], embedding: @vector_a, embedding_model: "qwen3-embedding:0.6b", embedded_at: Time.current)
-    @molecule_b = Molecule.create!(chemical_class: @chemical_class, name: "Morphine", description: "Federal Republic", themes: [ "federal" ], embedding: @vector_b, embedding_model: "qwen3-embedding:0.6b", embedded_at: Time.current)
+    @molecule_a = Molecule.create!(chemical_class: @chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid", themes: [ "alkaloid" ], embedding: @vector_a, embedding_model: "qwen3-embedding:0.6b", embedded_at: Time.current)
+    @molecule_b = Molecule.create!(chemical_class: @chemical_class, name: "Morphine", description: "Opioid analgesic alkaloid", themes: [ "analgesic" ], embedding: @vector_b, embedding_model: "qwen3-embedding:0.6b", embedded_at: Time.current)
 
     @snapshot = ClusterSnapshot.create!(
       target_type: "Molecule",
       level: 5,
       distance_threshold: 0.20,
-      title: "Alkaloidsan Core Snapshot",
+      title: "Alkaloid Core Snapshot",
       clusters_count: 1,
       items_count: 2
     )
-    @group = @snapshot.cluster_groups.create!(name: "Western Powers", shared_themes: [ "republic" ], size: 2)
+    @group = @snapshot.cluster_groups.create!(name: "Alkaloid Scaffolds", shared_themes: [ "alkaloid" ], size: 2)
     @group.cluster_memberships.create!(record: @molecule_a)
     @group.cluster_memberships.create!(record: @molecule_b)
   end
@@ -58,7 +58,7 @@ class Api::V1::ClustersAndSnapshotsControllerTest < ActionDispatch::IntegrationT
     assert_response :success
 
     json = response.parsed_body
-    assert_equal "Alkaloidsan Core Snapshot", json.dig("data", "title")
+    assert_equal "Alkaloid Core Snapshot", json.dig("data", "title")
     assert_equal 1, json.dig("data", "groups").size
     assert_equal 2, json.dig("data", "groups").first.dig("members").size
   end
@@ -77,7 +77,7 @@ class Api::V1::ClustersAndSnapshotsControllerTest < ActionDispatch::IntegrationT
 
     json = response.parsed_body
     assert_equal 1, json["data"].size
-    assert_equal "Western Powers", json["data"].first["name"]
+    assert_equal "Alkaloid Scaffolds", json["data"].first["name"]
   end
 
   test "GET /api/v1/cluster_groups/:id returns group with members" do
@@ -85,7 +85,7 @@ class Api::V1::ClustersAndSnapshotsControllerTest < ActionDispatch::IntegrationT
     assert_response :success
 
     json = response.parsed_body
-    assert_equal "Western Powers", json.dig("data", "name")
+    assert_equal "Alkaloid Scaffolds", json.dig("data", "name")
     assert_equal 2, json.dig("data", "members").size
   end
 end

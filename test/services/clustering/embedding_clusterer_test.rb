@@ -20,14 +20,14 @@ class EmbeddingClustererTest < ActiveSupport::TestCase
   end
 
   test "full_coverage absorbs singletons so unclustered count is zero" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     v1 = Array.new(1024, 0.1)
     v2 = Array.new(1024, 0.1) # pair
     v3 = Array.new(1024, 0.5) # singleton
 
-    Molecule.create!(chemical_class: europe, name: "Molecule 1", description: "D1", themes: [ "republic" ], embedding: v1)
-    Molecule.create!(chemical_class: europe, name: "Molecule 2", description: "D2", themes: [ "republic" ], embedding: v2)
-    Molecule.create!(chemical_class: europe, name: "Molecule 3", description: "D3", themes: [ "monarchy" ], embedding: v3)
+    Molecule.create!(chemical_class: europe, name: "Molecule 1", description: "D1", themes: [ "alkaloid" ], embedding: v1)
+    Molecule.create!(chemical_class: europe, name: "Molecule 2", description: "D2", themes: [ "alkaloid" ], embedding: v2)
+    Molecule.create!(chemical_class: europe, name: "Molecule 3", description: "D3", themes: [ "terpene" ], embedding: v3)
 
     result = Clustering::EmbeddingClusterer.call(Molecule, level: 5, full_coverage: true, force: true)
     assert_equal 0, result.singletons_count
@@ -35,14 +35,14 @@ class EmbeddingClustererTest < ActiveSupport::TestCase
   end
 
   test "clusters embedded molecules and supports saving snapshots" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     v1 = Array.new(1024, 0.1)
     v2 = Array.new(1024, 0.1) # identical to v1, distance = 0
     v3 = Array.new(1024, -0.1) # opposite vector, distance ~ 2.0
 
-    c1 = Molecule.create!(chemical_class: europe, name: "Molecule 1", description: "D1", themes: [ "republic" ], embedding: v1)
-    c2 = Molecule.create!(chemical_class: europe, name: "Molecule 2", description: "D2", themes: [ "republic" ], embedding: v2)
-    c3 = Molecule.create!(chemical_class: europe, name: "Molecule 3", description: "D3", themes: [ "monarchy" ], embedding: v3)
+    c1 = Molecule.create!(chemical_class: europe, name: "Molecule 1", description: "D1", themes: [ "alkaloid" ], embedding: v1)
+    c2 = Molecule.create!(chemical_class: europe, name: "Molecule 2", description: "D2", themes: [ "alkaloid" ], embedding: v2)
+    c3 = Molecule.create!(chemical_class: europe, name: "Molecule 3", description: "D3", themes: [ "terpene" ], embedding: v3)
 
     result = Clustering::EmbeddingClusterer.call(Molecule, level: 5, force: true)
     assert_operator result.total_embedded_count, :>=, 3

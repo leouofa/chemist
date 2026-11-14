@@ -82,12 +82,12 @@
                 <% end %>
               </div>
 
-              <!-- Cosmic structures badges -->
+              <!-- Chemical classes badges -->
               <div class="mt-3 sm:mt-0 flex flex-wrap gap-1 items-center justify-end">
-                <span class="text-xs text-slate-400 mr-1">Galaxies/Clusters:</span>
-                <% cluster.chemical_classes.each do |structure| %>
+                <span class="text-xs text-slate-400 mr-1">Chemical Classes:</span>
+                <% cluster.chemical_classes.each do |chemical_class_name| %>
                   <span class="inline-flex items-center rounded-full bg-slate-200/70 px-2 py-0.5 text-[11px] font-medium text-slate-700">
-                    <%= structure %>
+                    <%= chemical_class_name %>
                   </span>
                 <% end %>
               </div>

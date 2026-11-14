@@ -10,24 +10,24 @@ class HeuristicLabelerTest < ActiveSupport::TestCase
   end
 
   test "extracts shared themes and builds archetype title for molecules" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    c1 = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Western Alkaloids", themes: %w[nuclear maritime republic])
-    c2 = Molecule.create!(chemical_class: chemical_class, name: "United Kingdom", description: "Island state", themes: %w[nuclear maritime monarchy])
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    c1 = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid", themes: %w[heterocycle basic alkaloid])
+    c2 = Molecule.create!(chemical_class: chemical_class, name: "Cinchonine", description: "Cinchona alkaloid", themes: %w[heterocycle basic isomer])
 
     result = Clustering::HeuristicLabeler.label([ c1, c2 ])
-    assert_includes result[:shared_themes], "Nuclear"
-    assert_includes result[:shared_themes], "Maritime"
+    assert_includes result[:shared_themes], "Heterocycle"
+    assert_includes result[:shared_themes], "Basic"
     assert_includes result[:title], "Archetype"
   end
 
   test "extracts shared themes for functional_groups" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Western Alkaloids")
-    functional_group1 = FunctionalGroup.create!(molecule: molecule, name: "Marseille", description: "Port", themes: [ "port", "trade" ])
-    functional_group2 = FunctionalGroup.create!(molecule: molecule, name: "Le Havre", description: "Northern port", themes: [ "port", "logistics" ])
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid")
+    functional_group1 = FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring", description: "Aromatic heterocycle", themes: [ "heterocycle", "aromatic" ])
+    functional_group2 = FunctionalGroup.create!(molecule: molecule, name: "Pyridine Ring", description: "Six-membered aromatic ring", themes: [ "heterocycle", "nitrogen" ])
 
     result = Clustering::HeuristicLabeler.label([ functional_group1, functional_group2 ])
-    assert_includes result[:shared_themes], "Port"
+    assert_includes result[:shared_themes], "Heterocycle"
     assert_includes result[:title], "Archetype"
   end
 end

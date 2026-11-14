@@ -35,10 +35,10 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /clusters renders entity links targeting cluster_modal frame" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     v = Array.new(1024, 0.1)
     Molecule.create!(chemical_class: europe, name: "Quinine Modal Test", description: "Natural antimalarial alkaloid", embedding: v)
-    Molecule.create!(chemical_class: europe, name: "Morphine Modal Test", description: "Federal Republic", embedding: v)
+    Molecule.create!(chemical_class: europe, name: "Morphine Modal Test", description: "Opioid analgesic alkaloid", embedding: v)
 
     get clusters_path(tab: "molecules", level: 5)
     assert_response :success
@@ -48,11 +48,11 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /clusters with functional_groups tab renders functional_group links targeting cluster_modal frame" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid")
     v = Array.new(1024, 0.1)
-    FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring Modal Test", description: "Capital", themes: [ "capital" ], embedding: v)
-    FunctionalGroup.create!(molecule: molecule, name: "Marseille Modal Test", description: "Port", themes: [ "port" ], embedding: v)
+    FunctionalGroup.create!(molecule: molecule, name: "Quinoline Ring Modal Test", description: "Core", themes: [ "core" ], embedding: v)
+    FunctionalGroup.create!(molecule: molecule, name: "Piperidine Modal Test", description: "Heterocycle", themes: [ "heterocycle" ], embedding: v)
 
     get clusters_path(tab: "functional_groups", level: 5)
     assert_response :success
@@ -61,10 +61,10 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "POST /clusters/snapshot creates snapshot and redirects to it" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     v = Array.new(1024, 0.2)
-    Molecule.create!(chemical_class: europe, name: "Snap Molecule 1", description: "D1", themes: [ "republic" ], embedding: v)
-    Molecule.create!(chemical_class: europe, name: "Snap Molecule 2", description: "D2", themes: [ "republic" ], embedding: v)
+    Molecule.create!(chemical_class: europe, name: "Snap Molecule 1", description: "D1", themes: [ "alkaloid" ], embedding: v)
+    Molecule.create!(chemical_class: europe, name: "Snap Molecule 2", description: "D2", themes: [ "alkaloid" ], embedding: v)
 
     assert_difference "ClusterSnapshot.count", 1 do
       post snapshot_clusters_path, params: { tab: "molecules", level: 5, title: "Test Controller Snapshot" }

@@ -26,7 +26,7 @@ class MoleculeDiscoveryAgentTest < ActiveSupport::TestCase
   test "create! includes chemical_class context, existing molecule names, and JSON schema instructions" do
     chat = MoleculeDiscoveryAgent.create!(
       chemical_class_name: "Alkaloids",
-      chemical_class_description: "Alkaloidsan chemical_class with diverse sovereign states.",
+      chemical_class_description: "Major class of basic nitrogenous plant compounds.",
       existing_names: [ "Quinine", "Morphine" ]
     )
 
@@ -35,7 +35,7 @@ class MoleculeDiscoveryAgentTest < ActiveSupport::TestCase
 
     system_message = chat.messages.find_by!(role: "system")
     assert_includes system_message.content, "Alkaloids"
-    assert_includes system_message.content, "Alkaloidsan chemical_class with diverse sovereign states."
+    assert_includes system_message.content, "Major class of basic nitrogenous plant compounds."
     assert_includes system_message.content, "Quinine, Morphine"
     assert_includes system_message.content, '"molecules"'
     assert_includes system_message.content, '"themes"'

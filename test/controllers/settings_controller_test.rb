@@ -21,8 +21,8 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show renders settings page with nav link, config, coverage, and bulk buttons" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(
       chemical_class: europe,
       name: "Quinine",
       description: "Natural antimalarial alkaloid.",
@@ -30,8 +30,8 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
       embedding_model: "qwen3-embedding:0.6b",
       embedded_at: Time.current
     )
-    Molecule.create!(chemical_class: europe, name: "Morphine", description: "Federal Republic.")
-    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Capital.", themes: [ "capital" ])
+    Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.")
+    FunctionalGroup.create!(molecule: quinine, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.", themes: [ "heterocycle" ])
 
     get settings_url
 

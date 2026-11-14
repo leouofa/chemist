@@ -99,7 +99,7 @@ module Api
 
       def neighbors
         unless @functional_group.embedded?
-          return render_error(code: "not_embedded", message: "Celestial body does not have an embedding yet")
+          return render_error(code: "not_embedded", message: "Functional group does not have an embedding yet")
         end
 
         limit = (params[:limit].presence || 10).to_i.clamp(1, 100)

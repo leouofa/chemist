@@ -27,7 +27,7 @@ class ClusterSnapshotTest < ActiveSupport::TestCase
   end
 
   test "creates snapshot with groups and memberships and cascades destruction" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     molecule = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Western Alkaloidsan state.", themes: [ "republic", "nuclear" ])
 
     snapshot = ClusterSnapshot.create!(

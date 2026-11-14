@@ -41,10 +41,10 @@ class ClusterReportTest < ActiveSupport::TestCase
     assert report.running?
     assert report.in_progress?
 
-    report.mark_completed!(markdown_content: "# Findings\nGreat patterns.", refined_title: "Findings on Deities")
+    report.mark_completed!(markdown_content: "# Findings\nGreat patterns.", refined_title: "Findings on Alkaloids")
     assert report.completed?
     assert_not report.in_progress?
-    assert_equal "Findings on Deities", report.title
+    assert_equal "Findings on Alkaloids", report.title
     assert_equal "# Findings\nGreat patterns.", report.content
     assert_not_nil report.completed_at
 

@@ -25,10 +25,10 @@ class PopulateFunctionalGroupsJobTest < ActiveSupport::TestCase
   end
 
   test "perform iterates through molecules, upserts functional_groups with themes, and streams progress" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloids.", themes: [ "republic" ])
-    germany = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Central Alkaloids.", themes: [ "federal" ])
-    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Initial Quinoline Ring description", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.", themes: [ "alkaloid" ])
+    morphine = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.", themes: [ "analgesic" ])
+    FunctionalGroup.create!(molecule: quinine, name: "Quinoline Ring", description: "Initial Quinoline Ring description", themes: [ "heterocycle" ])
 
     calls = []
     responses = {
@@ -37,15 +37,15 @@ class PopulateFunctionalGroupsJobTest < ActiveSupport::TestCase
         ```json
         {
           "functional_groups": [
-            { "name": "Quinoline Ring", "description": "National capital and economic hub.", "themes": ["capital", "diplomacy"] },
-            { "name": "Marseille", "description": "Mediterranean port gateway.", "themes": ["port", "logistics"] }
+            { "name": "Quinoline Ring", "description": "Bicyclic aromatic nitrogen heterocycle.", "themes": ["heterocycle", "aromatic"] },
+            { "name": "Quinuclidine", "description": "Bicyclic tertiary amine scaffold.", "themes": ["amine", "bicyclic"] }
           ]
         }
         ```
       TEXT
       "Morphine" => {
         "functional_groups" => [
-          { "name": "Phenanthrene Core", "description": "Federal capital and cultural center.", "themes": [ "capital", "culture" ] }
+          { "name": "Phenanthrene Core", "description": "Fused polycyclic aromatic hydrocarbon core.", "themes": [ "polycyclic", "core" ] }
         ]
       }.to_json
     }
@@ -75,18 +75,18 @@ class PopulateFunctionalGroupsJobTest < ActiveSupport::TestCase
     assert_equal [ "Quinoline Ring" ], calls.second[:existing_names]
 
     assert_equal 3, FunctionalGroup.count
-    paris = france.functional_groups.find_by!(name: "Quinoline Ring")
-    assert_equal "National capital and economic hub.", paris.description
-    assert_equal [ "capital", "diplomacy" ], paris.themes
+    quinoline_ring = quinine.functional_groups.find_by!(name: "Quinoline Ring")
+    assert_equal "Bicyclic aromatic nitrogen heterocycle.", quinoline_ring.description
+    assert_equal [ "heterocycle", "aromatic" ], quinoline_ring.themes
 
-    berlin = germany.functional_groups.find_by!(name: "Phenanthrene Core")
-    assert_equal [ "capital", "culture" ], berlin.themes
+    core = morphine.functional_groups.find_by!(name: "Phenanthrene Core")
+    assert_equal [ "polycyclic", "core" ], core.themes
   end
 
   test "perform continues to remaining molecules if one molecule fails" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloids.")
-    germany = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Central Alkaloids.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    morphine = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.")
 
     with_stubbed_agent_create(->(molecule_name:, **) {
       fake_chat = Object.new
@@ -97,7 +97,7 @@ class PopulateFunctionalGroupsJobTest < ActiveSupport::TestCase
           parsed: nil,
           content: {
             "functional_groups" => [
-              { "name": "Phenanthrene Core", "description": "Federal capital.", "themes": [ "capital" ] }
+              { "name": "Phenanthrene Core", "description": "Fused aromatic core.", "themes": [ "core" ] }
             ]
           }.to_json
         )

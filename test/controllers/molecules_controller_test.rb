@@ -24,8 +24,8 @@ class MoleculesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show renders molecule details and Generate Embedding button" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.", themes: [ "republic" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.", themes: [ "alkaloid" ])
 
     get molecule_url(molecule)
 
@@ -36,8 +36,8 @@ class MoleculesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show with Turbo-Frame cluster_modal renders modal partial" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.", themes: [ "republic" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.", themes: [ "alkaloid" ])
 
     get molecule_url(molecule), headers: { "Turbo-Frame" => "cluster_modal" }
 
@@ -49,8 +49,8 @@ class MoleculesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "generate_embedding enqueues GenerateEmbeddingJob and responds with turbo stream" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
 
     assert_enqueued_with(job: GenerateEmbeddingJob, args: [ "Molecule", molecule.id ]) do
       post generate_embedding_molecule_url(molecule), as: :turbo_stream
@@ -62,8 +62,8 @@ class MoleculesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "generate_embedding enqueues GenerateEmbeddingJob and redirects for HTML requests" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloidsan republic.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    molecule = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
 
     assert_enqueued_with(job: GenerateEmbeddingJob, args: [ "Molecule", molecule.id ]) do
       post generate_embedding_molecule_url(molecule)

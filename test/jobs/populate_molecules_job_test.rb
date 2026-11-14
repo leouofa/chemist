@@ -25,26 +25,26 @@ class PopulateMoleculesJobTest < ActiveSupport::TestCase
   end
 
   test "perform iterates through chemical_classes, upserts molecules with themes, and streams progress" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    asia = ChemicalClass.create!(name: "Terpenoids", description: "Terpenoidsn chemical_class.")
-    Molecule.create!(chemical_class: europe, name: "Quinine", description: "Initial Quinine description", themes: [ "republic" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    asia = ChemicalClass.create!(name: "Terpenoids", description: "Diverse class of organic compounds derived from isoprene.")
+    Molecule.create!(chemical_class: europe, name: "Quinine", description: "Initial Quinine description", themes: [ "alkaloid" ])
 
     calls = []
     responses = {
       "Alkaloids" => <<~TEXT,
-        <think>Listing Alkaloidsan molecules.</think>
+        <think>Listing Alkaloids molecules.</think>
         ```json
         {
           "molecules": [
-            { "name": "Quinine", "description": "Fifth Republic.", "themes": ["republic", "nuclear power"] },
-            { "name": "Morphine", "description": "Federal Republic.", "themes": ["federal", "industrial"] }
+            { "name": "Quinine", "description": "Natural antimalarial alkaloid.", "themes": ["alkaloid", "antimalarial"] },
+            { "name": "Morphine", "description": "Opioid analgesic alkaloid.", "themes": ["analgesic", "opioid"] }
           ]
         }
         ```
       TEXT
       "Terpenoids" => {
         "molecules" => [
-          { "name": "Caffeine", "description": "Island state in East Terpenoids.", "themes": [ "island", "tech" ] }
+          { "name": "Caffeine", "description": "Central nervous system stimulant.", "themes": [ "stimulant", "xanthine" ] }
         ]
       }.to_json
     }
@@ -68,19 +68,19 @@ class PopulateMoleculesJobTest < ActiveSupport::TestCase
     assert_equal [], calls.second[:existing_names] # Terpenoids has none initially
 
     assert_equal 3, Molecule.count
-    france = europe.molecules.find_by!(name: "Quinine")
-    assert_equal "Fifth Republic.", france.description
-    assert_equal [ "republic", "nuclear power" ], france.themes
+    quinine = europe.molecules.find_by!(name: "Quinine")
+    assert_equal "Natural antimalarial alkaloid.", quinine.description
+    assert_equal [ "alkaloid", "antimalarial" ], quinine.themes
 
-    japan = asia.molecules.find_by!(name: "Caffeine")
-    assert_equal [ "island", "tech" ], japan.themes
+    caffeine = asia.molecules.find_by!(name: "Caffeine")
+    assert_equal [ "stimulant", "xanthine" ], caffeine.themes
   end
 
 
 
   test "perform continues to remaining chemical_classes if one chemical_class fails" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    asia = ChemicalClass.create!(name: "Terpenoids", description: "Terpenoidsn chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    asia = ChemicalClass.create!(name: "Terpenoids", description: "Diverse class of organic compounds derived from isoprene.")
 
     with_stubbed_agent_create(->(chemical_class_name:, **) {
       fake_chat = Object.new
@@ -91,7 +91,7 @@ class PopulateMoleculesJobTest < ActiveSupport::TestCase
           parsed: nil,
           content: {
             "molecules" => [
-              { "name" => "Quinine", "description" => "Western Alkaloids.", "themes" => [ "republic" ] }
+              { "name" => "Quinine", "description" => "Natural antimalarial alkaloid.", "themes" => [ "alkaloid" ] }
             ]
           }.to_json
         )

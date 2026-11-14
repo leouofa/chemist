@@ -2,20 +2,20 @@
 
 require "test_helper"
 
-class Api::V1::CitiesControllerTest < ActionDispatch::IntegrationTest
+class Api::V1::FunctionalGroupsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloid chemical class.")
     @vector_a = Array.new(1024) { |i| i == 0 ? 1.0 : 0.0 }
     @vector_b = Array.new(1024) { |i| i == 0 ? 0.98 : 0.02 }
 
-    @molecule = Molecule.create!(chemical_class: @chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.", themes: [ "republic" ])
-    @other_molecule = Molecule.create!(chemical_class: @chemical_class, name: "Morphine", description: "Federal Republic.", themes: [ "federal" ])
+    @molecule = Molecule.create!(chemical_class: @chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.", themes: [ "alkaloid" ])
+    @other_molecule = Molecule.create!(chemical_class: @chemical_class, name: "Morphine", description: "Opioid analgesic alkaloid.", themes: [ "analgesic" ])
 
     @functional_group = FunctionalGroup.create!(
       molecule: @molecule,
       name: "Quinoline Ring",
-      description: "National capital and economic hub.",
-      themes: [ "capital", "diplomacy" ],
+      description: "Bicyclic aromatic nitrogen heterocycle.",
+      themes: [ "heterocycle", "aromatic" ],
       embedding: @vector_a,
       embedding_model: "qwen3-embedding:0.6b",
       embedded_at: Time.current
@@ -40,7 +40,7 @@ class Api::V1::CitiesControllerTest < ActionDispatch::IntegrationTest
     json = response.parsed_body
     assert_equal @functional_group.id, json.dig("data", "id")
     assert_equal "Quinoline Ring", json.dig("data", "name")
-    assert_includes json.dig("data", "themes"), "capital"
+    assert_includes json.dig("data", "themes"), "heterocycle"
   end
 
   test "POST /api/v1/functional_groups creates functional_group for a molecule" do
@@ -49,8 +49,8 @@ class Api::V1::CitiesControllerTest < ActionDispatch::IntegrationTest
         functional_group: {
           molecule_id: @other_molecule.id,
           name: "Phenanthrene Core",
-          description: "Federal capital and cultural center.",
-          themes: [ "capital", "culture" ]
+          description: "Polycyclic aromatic hydrocarbon scaffold.",
+          themes: [ "polycyclic", "core" ]
         }
       }, as: :json
     end
@@ -81,8 +81,8 @@ class Api::V1::CitiesControllerTest < ActionDispatch::IntegrationTest
     other_functional_group = FunctionalGroup.create!(
       molecule: @molecule,
       name: "Quinuclidine Nitrogen",
-      description: "Gastronomic and industrial hub.",
-      themes: [ "industry", "culinary" ],
+      description: "Bicyclic tertiary amine functional group.",
+      themes: [ "amine", "tertiary" ],
       embedding: @vector_b,
       embedding_model: "qwen3-embedding:0.6b",
       embedded_at: Time.current

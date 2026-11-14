@@ -2,7 +2,7 @@
   <img src="docs/images/logo.jpg" alt="Chemist Logo" width="400" />
 </p>
 
-# Chemist: A Computational Laboratory for Comparative Astrophysics, Stellar Systems, and Celestial Body Manifolds
+# Chemist: A Computational Laboratory for Comparative Chemistry, Molecular Structures, and Functional Group Manifolds
 
 [![Ruby](https://img.shields.io/badge/Ruby-3.4%2B-CC342D?logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
 [![Rails 8.1+](https://img.shields.io/badge/Rails-8.1%2B-red.svg?logo=rubyonrails&logoColor=white)](https://rubyonrails.org)
@@ -15,23 +15,23 @@
 [![Hotwire](https://img.shields.io/badge/Hotwire-Turbo%20%26%20Stimulus-F3B01C.svg)](https://hotwired.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Chemist** is an open-source computational research platform and quantitative analytical laboratory designed for **astrophysicists**, **planetary scientists**, **extragalactic chemists**, and **stellar cartographers**. It enables researchers to systematically map, cluster, and synthesize chemical archetypes, evolutionary trajectories, orbital dynamics, and planetary manifolds across galaxies, molecules / compounds, and celestial bodies using **1024-dimensional semantic vector embeddings (`pgvector`)**, **graph-theoretic connected components**, and **multi-stage AI synthesis pipelines**.
+**Chemist** is an open-source computational research platform and quantitative analytical laboratory designed for **organic chemists**, **medicinal chemists**, **materials scientists**, and **computational biochemists**. It enables researchers to systematically map, cluster, and synthesize chemical archetypes, reactivity profiles, bioisosteric motifs, and structural manifolds across chemical classes, molecules / compounds, and functional groups using **1024-dimensional semantic vector embeddings (`pgvector`)**, **graph-theoretic connected components**, and **multi-stage AI synthesis pipelines**.
 
 ---
 
 ## Abstract & Scholarly Vision
 
-Modern observational and theoretical chemistry faces a deluge of empirical discoveries: thousands of exoplanets cataloged by Kepler, TESS, and JWST, complex stellar remnants and binary pulsars discovered across galactic discs, and morphologically distinct star clusters spanning the Local Group and beyond. How can researchers discover systemic archetypes across disparate cosmic structures without flattening unique physical parameters or relying on isolated, uncontextualized surveys?
+Modern synthetic and medicinal chemistry faces a deluge of empirical discoveries: massive natural product databases, novel synthetic libraries, diverse bioisosteric motifs, and distinct pharmacophores across myriad chemical classes. How can researchers discover systemic archetypes across disparate chemical spaces without flattening unique stereoelectronic parameters or relying on isolated, uncontextualized screening?
 
 Chemist operationalizes comparative chemistry within a transparent, reproducible, locally hosted computational laboratory:
 
-1. **Multi-Tier Cosmic Architecture**:
-   - **Chemical Classes (`ChemicalClass`)**: Major galactic structures, dwarf galaxies, and galaxy clusters (e.g., Milky Way, Andromeda Galaxy M31, Large Magellanic Cloud, Small Magellanic Cloud, Triangulum Galaxy M33, Centaurus A, Virgo Cluster).
-   - **Molecules / Compounds (`Molecule`)**: Stellar hosts, binary/multiple molecules / compounds, neutron stars, X-ray pulsars, and compact remnants belonging to cosmic structures (`belongs_to :chemical_class`).
-   - **Atoms / Functional Groups (`FunctionalGroup`)**: Terrestrial exoplanets, gas/ice giants, ocean worlds, dwarf planets, major moons, and circumstellar features (`belongs_to :molecule`).
-2. **High-Dimensional Semantic Manifold**: Every star system and celestial body profile is projected into a **1024-dimensional vector space** indexed via PostgreSQL `pgvector` HNSW (`vector_cosine_ops`), enabling empirical measurement of physical and evolutionary proximity.
+1. **Multi-Tier Chemical Architecture**:
+   - **Chemical Classes (`ChemicalClass`)**: Major chemical superfamilies, biosynthetic classes, and compound families (e.g., Alkaloids, Terpenoids, Flavonoids, Polyketides, Peptides, Steroids).
+   - **Molecules / Compounds (`Molecule`)**: Individual molecules, scaffolds, and chemical entities belonging to chemical classes (`belongs_to :chemical_class`).
+   - **Atoms / Functional Groups (`FunctionalGroup`)**: Key functional groups, pharmacophores, reactive motifs, and substituents (`belongs_to :molecule`).
+2. **High-Dimensional Semantic Manifold**: Every molecule and functional group profile is projected into a **1024-dimensional vector space** indexed via PostgreSQL `pgvector` HNSW (`vector_cosine_ops`), enabling empirical measurement of structural and stereoelectronic proximity.
 3. **Multi-Granularity Empirical Clustering & Snapshotting**: Researchers interactively tune cosine distance thresholds across **15 granularity levels** (from tight structural twins at *Level 1, $\le 0.16$* to zero-singleton **100% Full Catalog Coverage** at *Level 15* via nearest-cluster singleton absorption) and freeze states into immutable **Cluster Snapshots**.
-4. **Map-Reduce & Hierarchical Deep Synthesis Reports**: Rather than shallow single-prompt summaries, Chemist executes a **2-Phase Map-Reduce** or **3-Phase Hierarchical Deep Synthesis** workflow over saved snapshots, inspecting every cluster through the researcher's specific inquiry and grounding every finding in cited cluster numbers, molecules / compounds, and celestial bodies.
+4. **Map-Reduce & Hierarchical Deep Synthesis Reports**: Rather than shallow single-prompt summaries, Chemist executes a **2-Phase Map-Reduce** or **3-Phase Hierarchical Deep Synthesis** workflow over saved snapshots, inspecting every cluster through the researcher's specific inquiry and grounding every finding in cited cluster numbers, molecules / compounds, and functional groups.
 
 ---
 
@@ -50,8 +50,8 @@ Chemist operationalizes comparative chemistry within a transparent, reproducible
 ```mermaid
 flowchart TD
     subgraph S1["Stage I: Corpus Discovery"]
-        P["ChemicalClassDiscoveryAgent\n(Galaxies & Clusters)"] --> G["MoleculeDiscoveryAgent\n(Molecules / Compounds & Astrophysical Themes)"]
-        G --> M["FunctionalGroupDiscoveryAgent\n(Exoplanets, Moons, Remnants)"]
+        P["ChemicalClassDiscoveryAgent\n(Chemical Classes)"] --> G["MoleculeDiscoveryAgent\n(Molecules & Stereoelectronic Themes)"]
+        G --> M["FunctionalGroupDiscoveryAgent\n(Functional Groups & Reactive Motifs)"]
     end
 
     subgraph S2["Stage II: High-Dimensional Embeddings"]
@@ -116,11 +116,11 @@ Chemist provides a full-featured REST API under `/api/v1` returning JSON respons
 
 ### Key Endpoints
 
-- `GET /api/v1/chemical_classes`: List galaxies and galaxy clusters
+- `GET /api/v1/chemical_classes`: List chemical classes
 - `GET /api/v1/molecules`: List molecules / compounds with optional filtering by `chemical_class_id`, `theme`, or `q`
-- `GET /api/v1/molecules/:id/neighbors`: Find nearest cosine-distance star system neighbors
-- `GET /api/v1/functional_groups`: List celestial bodies with pagination
-- `GET /api/v1/functional_groups/:id/neighbors`: Find nearest celestial body counterparts
+- `GET /api/v1/molecules/:id/neighbors`: Find nearest cosine-distance molecule neighbors
+- `GET /api/v1/functional_groups`: List functional groups with pagination
+- `GET /api/v1/functional_groups/:id/neighbors`: Find nearest functional group counterparts
 - `GET /api/v1/clusters?target=Molecule&level=5`: Interactive agglomerative clustering
 - `POST /api/v1/cluster_snapshots`: Freeze an empirical cluster snapshot
 - `POST /api/v1/cluster_reports`: Synthesize an AI-grounded Map-Reduce or Deep Synthesis report

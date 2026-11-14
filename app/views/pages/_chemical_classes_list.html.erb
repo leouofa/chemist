@@ -5,15 +5,15 @@
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <% chemical_classes.each do |structure| %>
+      <% chemical_classes.each do |chemical_class| %>
         <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-slate-900"><%= structure.name %></h2>
+            <h2 class="text-lg font-semibold text-slate-900"><%= chemical_class.name %></h2>
             <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-              <%= pluralize(structure.molecules.size, "molecule") %>
+              <%= pluralize(chemical_class.molecules.size, "molecule") %>
             </span>
           </div>
-          <p class="mt-2 text-sm leading-relaxed text-slate-600"><%= structure.description %></p>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600"><%= chemical_class.description %></p>
         </article>
       <% end %>
     </div>
@@ -21,7 +21,7 @@
     <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
       <h2 class="text-base font-semibold text-slate-900">No chemical classes yet</h2>
       <p class="mt-1 text-sm text-slate-600">
-        Click <span class="font-medium text-slate-800">Populate Cosmic Structures</span> above to have the agent discover and catalog major chemical classes and clusters.
+        Click <span class="font-medium text-slate-800">Populate Chemical Classes</span> above to have the agent discover and catalog major chemical classes and clusters.
       </p>
     </div>
   <% end %>

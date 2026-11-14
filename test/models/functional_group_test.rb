@@ -12,38 +12,38 @@ class FunctionalGroupTest < ActiveSupport::TestCase
   end
 
   test "normalizes name, description, and themes" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     molecule = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.")
     functional_group = FunctionalGroup.create!(
       molecule: molecule,
       name: "  Quinoline Ring   FunctionalGroup ",
-      description: "  Capital and financial center.  ",
-      themes: [ " diplomacy ", "Finance", "DIPLOMACY", "", nil ]
+      description: "  Aromatic nitrogen heterocycle.  ",
+      themes: [ " heterocycle ", "Amine", "HETEROCYCLE", "", nil ]
     )
 
     assert_equal "Quinoline Ring FunctionalGroup", functional_group.name
-    assert_equal "Capital and financial center.", functional_group.description
-    assert_equal [ "diplomacy", "Finance" ], functional_group.themes
+    assert_equal "Aromatic nitrogen heterocycle.", functional_group.description
+    assert_equal [ "heterocycle", "Amine" ], functional_group.themes
   end
 
   test "normalizes comma-separated string themes into a string array" do
-    chemical_class = ChemicalClass.create!(name: "Terpenoids", description: "Terpenoidsn chemical_class.")
-    molecule = Molecule.create!(chemical_class: chemical_class, name: "Caffeine", description: "East Terpenoidsn state.")
+    chemical_class = ChemicalClass.create!(name: "Terpenoids", description: "Diverse class of organic compounds derived from isoprene.")
+    molecule = Molecule.create!(chemical_class: chemical_class, name: "Caffeine", description: "Natural methylxanthine alkaloid.")
     functional_group = FunctionalGroup.create!(
       molecule: molecule,
       name: "Purine Dione Core",
-      description: "Capital of Caffeine.",
-      themes: "megafunctional_group, global finance, robotics, Megafunctional_group"
+      description: "Bicyclic aromatic functional core.",
+      themes: "purine, xanthine, core, Purine"
     )
 
-    assert_equal [ "megafunctional_group", "global finance", "robotics" ], functional_group.themes
+    assert_equal [ "purine", "xanthine", "core" ], functional_group.themes
   end
 
   test "enforces case-insensitive uniqueness scoped per molecule" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     france = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.")
-    usa_chemical_class = ChemicalClass.create!(name: "North America", description: "North American chemical_class.")
-    usa = Molecule.create!(chemical_class: usa_chemical_class, name: "United States", description: "Federal Republic.")
+    usa_chemical_class = ChemicalClass.create!(name: "Flavonoids", description: "Polyphenolic plant secondary metabolites.")
+    usa = Molecule.create!(chemical_class: usa_chemical_class, name: "Quercetin", description: "Flavonol compound.")
 
     FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Aromatic nitrogen heterocycle.")
 
@@ -51,21 +51,21 @@ class FunctionalGroupTest < ActiveSupport::TestCase
     assert_not same_molecule_dup.valid?
     assert_includes same_molecule_dup.errors[:name], "has already been taken"
 
-    other_molecule_functional_group = FunctionalGroup.new(molecule: usa, name: "Quinoline Ring", description: "Quinoline Ring, Texas.")
+    other_molecule_functional_group = FunctionalGroup.new(molecule: usa, name: "Quinoline Ring", description: "Synthetic quinoline derivative.")
     assert other_molecule_functional_group.valid?
   end
 
   test "upsert_batch! inserts new functional_groups and updates existing ones within a molecule" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     france = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.")
-    germany = Molecule.create!(chemical_class: chemical_class, name: "Morphine", description: "Federal Republic.")
+    germany = Molecule.create!(chemical_class: chemical_class, name: "Morphine", description: "Opioid analgesic alkaloid.")
 
-    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Old description", themes: [ "capital" ])
-    FunctionalGroup.create!(molecule: germany, name: "Quinoline Ring", description: "Different Quinoline Ring", themes: [ "town" ])
+    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Old description", themes: [ "core" ])
+    FunctionalGroup.create!(molecule: germany, name: "Quinoline Ring", description: "Different Quinoline Ring", themes: [ "substituent" ])
 
     results = FunctionalGroup.upsert_batch!(france, [
-      { "name" => "  quinoline ring ", "description" => "Global diplomatic hub.", "themes" => [ "capital", "diplomacy" ] },
-      { "name" => "Marseille", "description" => "Port functional_group.", "themes" => [ "maritime", "trade" ] },
+      { "name" => "  quinoline ring ", "description" => "Aromatic nitrogen heterocycle.", "themes" => [ "heterocycle", "aromatic" ] },
+      { "name" => "Quinuclidine", "description" => "Bicyclic tertiary amine.", "themes" => [ "amine", "bicyclic" ] },
       { "name" => "", "description" => "Ignored blank name" },
       { "name" => "Quinuclidine Nitrogen", "description" => "   " }
     ])
@@ -76,55 +76,55 @@ class FunctionalGroupTest < ActiveSupport::TestCase
 
     france_paris = france.functional_groups.find_by!("LOWER(name) = ?", "quinoline ring")
     assert_equal "quinoline ring", france_paris.name
-    assert_equal "Global diplomatic hub.", france_paris.description
-    assert_equal [ "capital", "diplomacy" ], france_paris.themes
+    assert_equal "Aromatic nitrogen heterocycle.", france_paris.description
+    assert_equal [ "heterocycle", "aromatic" ], france_paris.themes
 
-    marseille = france.functional_groups.find_by!(name: "Marseille")
-    assert_equal [ "maritime", "trade" ], marseille.themes
+    quinuclidine = france.functional_groups.find_by!(name: "Quinuclidine")
+    assert_equal [ "amine", "bicyclic" ], quinuclidine.themes
   end
 
   test "grouped_by_molecule returns molecule groups and functional_groups sorted alphabetically" do
-    asia = ChemicalClass.create!(name: "Terpenoids", description: "Terpenoidsn chemical_class.")
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    asia = ChemicalClass.create!(name: "Terpenoids", description: "Diverse class of organic compounds derived from isoprene.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
 
-    japan = Molecule.create!(chemical_class: asia, name: "Caffeine", description: "East Terpenoids.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloids.")
+    caffeine = Molecule.create!(chemical_class: asia, name: "Caffeine", description: "Natural methylxanthine alkaloid.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
 
-    FunctionalGroup.create!(molecule: japan, name: "Purine Dione Core", description: "Capital.", themes: [ "capital" ])
-    FunctionalGroup.create!(molecule: japan, name: "Osaka", description: "Commercial center.", themes: [ "commerce" ])
-    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Capital.", themes: [ "capital" ])
-    FunctionalGroup.create!(molecule: france, name: "Quinuclidine Nitrogen", description: "Gastronomy center.", themes: [ "culinary" ])
+    FunctionalGroup.create!(molecule: caffeine, name: "Purine Dione Core", description: "Core.", themes: [ "core" ])
+    FunctionalGroup.create!(molecule: caffeine, name: "Imidazole Ring", description: "Five-membered aromatic ring.", themes: [ "heterocycle" ])
+    FunctionalGroup.create!(molecule: quinine, name: "Quinoline Ring", description: "Core.", themes: [ "core" ])
+    FunctionalGroup.create!(molecule: quinine, name: "Quinuclidine Nitrogen", description: "Bridgehead nitrogen atom.", themes: [ "amine" ])
 
     groups = FunctionalGroup.grouped_by_molecule
     assert_equal [ "Quinine", "Caffeine" ], groups.map { |molecule, _| molecule.name }
     assert_equal [ "Quinoline Ring", "Quinuclidine Nitrogen" ], groups[0][1].map(&:name)
-    assert_equal [ "Osaka", "Purine Dione Core" ], groups[1][1].map(&:name)
+    assert_equal [ "Imidazole Ring", "Purine Dione Core" ], groups[1][1].map(&:name)
   end
 
   test "destroying a molecule destroys its associated functional_groups" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Western Alkaloids.")
-    FunctionalGroup.create!(molecule: france, name: "Quinoline Ring", description: "Capital.", themes: [ "capital" ])
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    FunctionalGroup.create!(molecule: quinine, name: "Quinoline Ring", description: "Core.", themes: [ "core" ])
 
     assert_difference "FunctionalGroup.count", -1 do
-      france.destroy
+      quinine.destroy
     end
   end
 
   test "embedding_input formats functional_group, molecule, chemical_class, description, and themes" do
-    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     molecule = Molecule.create!(chemical_class: chemical_class, name: "Quinine", description: "Natural antimalarial alkaloid.")
     functional_group = FunctionalGroup.new(
       molecule: molecule,
       name: "Quinoline Ring",
-      description: "Center of state power.",
-      themes: [ "governance", "diplomacy" ]
+      description: "Bicyclic aromatic nitrogen heterocycle.",
+      themes: [ "heterocycle", "aromatic" ]
     )
 
     expected = <<~TXT.strip
       Functional Group / Atomic Site: Quinoline Ring (Quinine, Alkaloids)
-      Description: Center of state power.
-      Themes: governance, diplomacy
+      Description: Bicyclic aromatic nitrogen heterocycle.
+      Themes: heterocycle, aromatic
     TXT
 
     assert_equal expected, functional_group.embedding_input

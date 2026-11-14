@@ -35,10 +35,10 @@ class GenerateClusterReportJobTest < ActiveSupport::TestCase
 
   test "performs report generation and marks completed" do
     fake_cluster_response = OpenStruct.new(
-      content: "Cluster 1 represents sovereignty over celestial realms and civic law."
+      content: "Cluster 1 represents nitrogenous bicyclic alkaloids with receptor affinity."
     )
     fake_report_response = OpenStruct.new(
-      content: "# Patterns in the Maritime Realm\n\nExecutive Summary: Sovereign states negotiate maritime boundaries."
+      content: "# Patterns in Alkaloid Scaffolds\n\nExecutive Summary: Bicyclic amine cores exhibit consistent hydrogen bonding."
     )
 
     recorded_cluster_prompts = []
@@ -58,7 +58,7 @@ class GenerateClusterReportJobTest < ActiveSupport::TestCase
     @report.reload
     assert @report.completed?
     assert_equal "completed", @report.phase
-    assert_equal "Patterns in the Maritime Realm", @report.title
+    assert_equal "Patterns in Alkaloid Scaffolds", @report.title
     assert_includes @report.content, "Executive Summary"
     assert_not_nil @report.completed_at
     assert_equal 1, recorded_cluster_prompts.size

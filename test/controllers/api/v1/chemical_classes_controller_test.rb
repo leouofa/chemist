@@ -4,7 +4,7 @@ require "test_helper"
 
 class Api::V1::ChemicalClassesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    @chemical_class = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
   end
 
   test "GET /api/v1/chemical_classes returns list" do
@@ -28,7 +28,7 @@ class Api::V1::ChemicalClassesControllerTest < ActionDispatch::IntegrationTest
 
   test "POST /api/v1/chemical_classes creates a new chemical_class" do
     assert_difference("ChemicalClass.count", 1) do
-      post api_v1_chemical_classes_url, params: { chemical_class: { name: "Terpenoids", description: "Terpenoidsn chemical_class." } }, as: :json
+      post api_v1_chemical_classes_url, params: { chemical_class: { name: "Terpenoids", description: "Diverse class of organic compounds derived from isoprene." } }, as: :json
     end
     assert_response :created
 

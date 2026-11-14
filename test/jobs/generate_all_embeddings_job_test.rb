@@ -6,9 +6,9 @@ class GenerateAllEmbeddingsJobTest < ActiveJob::TestCase
   include ActionCable::TestHelper
 
   test "perform with only_missing: true skips already-embedded molecules and embeds missing ones" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
     existing_vector = Array.new(1024, 0.1)
-    france = Molecule.create!(
+    quinine = Molecule.create!(
       chemical_class: europe,
       name: "Quinine",
       description: "Natural antimalarial alkaloid.",
@@ -16,7 +16,7 @@ class GenerateAllEmbeddingsJobTest < ActiveJob::TestCase
       embedding_model: "old-model",
       embedded_at: 1.day.ago
     )
-    germany = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Federal Republic.")
+    morphine = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.")
 
     new_vector = Array.new(1024, 0.2)
     called_texts = []
@@ -32,25 +32,25 @@ class GenerateAllEmbeddingsJobTest < ActiveJob::TestCase
 
     assert_equal 1, called_texts.size
     assert_match "Morphine", called_texts.first
-    assert_equal "old-model", france.reload.embedding_model
-    assert_equal "qwen3-embedding:0.6b", germany.reload.embedding_model
+    assert_equal "old-model", quinine.reload.embedding_model
+    assert_equal "qwen3-embedding:0.6b", morphine.reload.embedding_model
   end
 
   test "perform with only_missing: false regenerates all functional_groups" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
-    germany = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Federal Republic.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    morphine = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.")
 
     functional_group1 = FunctionalGroup.create!(
-      molecule: france,
+      molecule: quinine,
       name: "Quinoline Ring",
-      description: "National capital.",
-      themes: [ "capital" ],
+      description: "Aromatic nitrogen heterocycle.",
+      themes: [ "heterocycle" ],
       embedding: Array.new(1024, 0.1),
       embedding_model: "old-model",
       embedded_at: 1.day.ago
     )
-    functional_group2 = FunctionalGroup.create!(molecule: germany, name: "Phenanthrene Core", description: "Federal capital.", themes: [ "capital" ])
+    functional_group2 = FunctionalGroup.create!(molecule: morphine, name: "Phenanthrene Core", description: "Fused ring core.", themes: [ "core" ])
 
     new_vector = Array.new(1024, 0.3)
     called_count = 0
@@ -70,9 +70,9 @@ class GenerateAllEmbeddingsJobTest < ActiveJob::TestCase
   end
 
   test "perform continues remaining records when one record fails" do
-    europe = ChemicalClass.create!(name: "Alkaloids", description: "Alkaloidsan chemical_class.")
-    france = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
-    germany = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Federal Republic.")
+    europe = ChemicalClass.create!(name: "Alkaloids", description: "Naturally occurring basic nitrogen compounds.")
+    quinine = Molecule.create!(chemical_class: europe, name: "Quinine", description: "Natural antimalarial alkaloid.")
+    morphine = Molecule.create!(chemical_class: europe, name: "Morphine", description: "Opioid analgesic alkaloid.")
 
     new_vector = Array.new(1024, 0.4)
 
@@ -86,8 +86,8 @@ class GenerateAllEmbeddingsJobTest < ActiveJob::TestCase
       end
     end
 
-    assert_not france.reload.embedded?
-    assert germany.reload.embedded?
+    assert_not quinine.reload.embedded?
+    assert morphine.reload.embedded?
   end
 
   test "perform broadcasts info message when nothing needs embedding" do

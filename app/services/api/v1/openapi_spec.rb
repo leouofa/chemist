@@ -35,7 +35,7 @@ module Api
             },
             "/search" => {
               get: {
-                summary: "Cross-resource semantic or keyword search across Countries and Cities",
+                summary: "Cross-resource semantic or keyword search across Molecules and Functional Groups",
                 operationId: "searchAll",
                 parameters: [
                   { name: "q", in: "query", required: true, schema: { type: "string" } },
@@ -166,7 +166,7 @@ module Api
             "/chemical_classes/{id}/populate_molecules" => {
               post: {
                 summary: "Trigger LLM discovery of molecules for a single chemical_class",
-                operationId: "populateChemicalClassCountries",
+                operationId: "populateChemicalClassMolecules",
                 parameters: [
                   { name: "id", in: "path", required: true, schema: { type: "integer" } },
                   { name: "sync", in: "query", required: false, schema: { type: "boolean", default: false } }
@@ -177,7 +177,7 @@ module Api
             "/molecules" => {
               get: {
                 summary: "List/filter molecules",
-                operationId: "listCountries",
+                operationId: "listMolecules",
                 parameters: [
                   { name: "chemical_class_id", in: "query", required: false, schema: { type: "integer" } },
                   { name: "chemical_class", in: "query", required: false, schema: { type: "string" } },
@@ -217,7 +217,7 @@ module Api
             "/molecules/search" => {
               get: {
                 summary: "Semantic or keyword search for molecules",
-                operationId: "searchCountries",
+                operationId: "searchMolecules",
                 parameters: [
                   { name: "q", in: "query", required: true, schema: { type: "string" } },
                   { name: "mode", in: "query", required: false, schema: { type: "string", enum: %w[semantic keyword auto], default: "auto" } },
@@ -297,18 +297,18 @@ module Api
             "/molecules/{id}/populate_functional_groups" => {
               post: {
                 summary: "Discover/populate functional_groups for a molecule via LLM",
-                operationId: "populateMoleculeCities",
+                operationId: "populateMoleculeFunctionalGroups",
                 parameters: [
                   { name: "id", in: "path", required: true, schema: { type: "integer" } },
                   { name: "sync", in: "query", required: false, schema: { type: "boolean", default: true } }
                 ],
-                responses: { "200" => { description: "Cities created" }, "202" => { description: "Job queued" } }
+                responses: { "200" => { description: "Functional groups created" }, "202" => { description: "Job queued" } }
               }
             },
             "/molecules/populate" => {
               post: {
                 summary: "Trigger bulk LLM molecule discovery",
-                operationId: "populateAllCountries",
+                operationId: "populateAllMolecules",
                 parameters: [
                   { name: "chemical_class_id", in: "query", required: false, schema: { type: "integer" } },
                   { name: "sync", in: "query", required: false, schema: { type: "boolean", default: false } }
@@ -319,7 +319,7 @@ module Api
             "/molecules/upsert_batch" => {
               post: {
                 summary: "Batch upsert molecules for a chemical_class",
-                operationId: "batchUpsertCountries",
+                operationId: "batchUpsertMolecules",
                 requestBody: {
                   required: true,
                   content: {
@@ -352,7 +352,7 @@ module Api
             "/functional_groups" => {
               get: {
                 summary: "List/filter functional_groups",
-                operationId: "listCities",
+                operationId: "listFunctionalGroups",
                 parameters: [
                   { name: "molecule_id", in: "query", required: false, schema: { type: "integer" } },
                   { name: "chemical_class_id", in: "query", required: false, schema: { type: "integer" } },
@@ -391,7 +391,7 @@ module Api
             "/functional_groups/search" => {
               get: {
                 summary: "Semantic or keyword search for functional_groups",
-                operationId: "searchCities",
+                operationId: "searchFunctionalGroups",
                 parameters: [
                   { name: "q", in: "query", required: true, schema: { type: "string" } },
                   { name: "mode", in: "query", required: false, schema: { type: "string", enum: %w[semantic keyword auto], default: "auto" } },
@@ -471,7 +471,7 @@ module Api
             "/functional_groups/populate" => {
               post: {
                 summary: "Trigger bulk LLM functional_group discovery",
-                operationId: "populateAllCities",
+                operationId: "populateAllFunctionalGroups",
                 parameters: [
                   { name: "molecule_id", in: "query", required: false, schema: { type: "integer" } },
                   { name: "sync", in: "query", required: false, schema: { type: "boolean", default: false } }
@@ -482,7 +482,7 @@ module Api
             "/functional_groups/upsert_batch" => {
               post: {
                 summary: "Batch upsert functional_groups for a molecule",
-                operationId: "batchUpsertCities",
+                operationId: "batchUpsertFunctionalGroups",
                 requestBody: {
                   required: true,
                   content: {

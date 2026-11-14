@@ -53,7 +53,7 @@ module Api
       def populate
         if sync_requested?
           result = PopulateChemicalClassesJob.new.perform
-          render_success({ message: "Cosmic structures populated", result: result })
+          render_success({ message: "Chemical classes populated", result: result })
         else
           job = PopulateChemicalClassesJob.perform_later
           render_success({ job_id: job.job_id, status: "queued" }, status: :accepted)

@@ -16,7 +16,7 @@ module Api
       def generate_embeddings
         model_type = params.require(:model_type).to_s.classify
         config = GenerateAllEmbeddingsJob::EMBEDDABLE_MODELS[model_type]
-        return render_error(code: "invalid_model_type", message: "model_type must be either 'StarSystem' or 'CelestialBody'") unless config
+        return render_error(code: "invalid_model_type", message: "model_type must be either 'Molecule' or 'FunctionalGroup'") unless config
 
         only_missing = boolean_param(:only_missing, default: true)
         job = GenerateAllEmbeddingsJob.perform_later(model_type, only_missing: only_missing)
