@@ -1,0 +1,29 @@
+<% content_for :title, "Molecules / Compounds | Chemist" %>
+
+<%= turbo_stream_from PopulateMoleculesJob::GLOBAL_STREAM_NAME %>
+
+<div class="w-full max-w-5xl mx-auto space-y-8 pb-16">
+  <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between border-b border-slate-200 pb-6">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900">Molecules / Compounds</h1>
+      <p class="mt-2 text-sm text-slate-600">
+        <%= @total_molecules_count %> molecules / compounds cataloged across <%= @chemical_classes_count %> chemical classes.
+      </p>
+    </div>
+
+    <div class="shrink-0">
+      <%= render "pages/populate_controls",
+                 running: false,
+                 action_path: populate_molecules_path,
+                 button_label: "Discover Molecules / Compounds",
+                 controls_target: "populate_all_molecules_controls",
+                 status_message: notice,
+                 status_kind: (notice.present? ? :info : nil) %>
+    </div>
+  </header>
+
+  <%= render "pages/molecules_list",
+             chemical_class_groups: @chemical_class_groups,
+             total_molecules_count: @total_molecules_count,
+             chemical_classes_count: @chemical_classes_count %>
+</div>
