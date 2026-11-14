@@ -13,9 +13,12 @@
 [![Sidekiq](https://img.shields.io/badge/Sidekiq-Background_Jobs-B91C1C.svg?logo=sidekiq&logoColor=white)](https://sidekiq.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Hotwire](https://img.shields.io/badge/Hotwire-Turbo%20%26%20Stimulus-F3B01C.svg)](https://hotwired.dev)
+[![MCP Server](https://img.shields.io/badge/MCP_Server-chemist--mcp-6366f1.svg?logo=github&logoColor=white)](https://github.com/leouofa/chemist-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Chemist** is an open-source computational research platform and quantitative analytical laboratory designed for **organic chemists**, **medicinal chemists**, **materials scientists**, and **computational biochemists**. It enables researchers to systematically map, cluster, and synthesize chemical archetypes, reactivity profiles, bioisosteric motifs, and structural manifolds across chemical classes, molecules / compounds, and functional groups using **1024-dimensional semantic vector embeddings (`pgvector`)**, **graph-theoretic connected components**, and **multi-stage AI synthesis pipelines**.
+
+Pair it with the official **[Chemist MCP Server](https://github.com/leouofa/chemist-mcp)** to connect AI agents (Claude Desktop, Claude Code, Cursor, Gemini CLI, Antigravity) directly to your computational laboratory.
 
 ---
 
@@ -124,6 +127,47 @@ Chemist provides a full-featured REST API under `/api/v1` returning JSON respons
 - `GET /api/v1/clusters?target=Molecule&level=5`: Interactive agglomerative clustering
 - `POST /api/v1/cluster_snapshots`: Freeze an empirical cluster snapshot
 - `POST /api/v1/cluster_reports`: Synthesize an AI-grounded Map-Reduce or Deep Synthesis report
+
+---
+
+## Official Model Context Protocol (MCP) Server
+
+Connect AI coding agents, IDEs, and assistant workflows (such as Claude Desktop, Claude Code, Cursor, Gemini CLI, and Antigravity) directly to Chemist via the official companion MCP server:
+
+👉 **[Chemist MCP Server (`chemist-mcp`)](https://github.com/leouofa/chemist-mcp)**
+
+```mermaid
+flowchart LR
+    Agents["AI Agents\n(Claude / Cursor / Antigravity)"] <-->|MCP stdio| MCP["chemist-mcp"]
+    MCP <-->|REST API /api/v1| Chemist["Chemist Lab\n(Rails 8.1 Engine)"]
+    Chemist <--> DB["PostgreSQL 16\n(pgvector HNSW)"]
+    Chemist <--> LLM["Local Ollama\n(Inference & Embeddings)"]
+```
+
+The MCP server provides:
+- **51 Registered Tools**: Cross-catalog hybrid semantic search, nearest bioisosteric counterpart discovery, full CRUD and discovery triggers for chemical classes, molecules, and functional groups, 15-level agglomerative clustering, cluster snapshot freezing, and multi-stage Map-Reduce / Deep Synthesis report generation.
+- **4 Registered Resources**: Read-only access to live platform status (`chemist://status`), chemical class catalogs (`chemist://chemical-classes`), cluster snapshots (`chemist://snapshots/{id}`), and generated monographs (`chemist://reports/{id}`).
+- **2 Prompt Templates**: Guided workflows for comparative chemical analysis (`comparative_chemical_analysis`) and cluster snapshot monographs (`chemical_cluster_monograph`).
+
+### Quick Setup
+
+Add to your MCP client configuration (e.g., `claude_desktop_config.json`, Cursor, or Antigravity MCP settings):
+
+```json
+{
+  "mcpServers": {
+    "chemist": {
+      "command": "node",
+      "args": ["/path/to/chemist-mcp/dist/index.js"],
+      "env": {
+        "CHEMIST_API_URL": "http://localhost:3000/api/v1"
+      }
+    }
+  }
+}
+```
+
+For installation and local development instructions, see the **[chemist-mcp repository](https://github.com/leouofa/chemist-mcp)**.
 
 ---
 

@@ -1,6 +1,6 @@
 # Chemist REST API (`/api/v1`) Specification & Developer Reference
 
-This document provides a comprehensive technical reference for the programmatic REST API exposed by **Chemist** under `/api/v1`. The API is designed for external applications, researchers, and companion client environments (such as an MCP server or Python computational chemistry scripts) to query, manipulate, and orchestrate the entire chemistry catalog, vector embedding manifold, archetype clustering engine, and multi-stage LLM synthesis pipelines.
+This document provides a comprehensive technical reference for the programmatic REST API exposed by **Chemist** under `/api/v1`. The API is designed for external applications, researchers, and companion client environments (such as the official [chemist-mcp](https://github.com/leouofa/chemist-mcp) server or Python computational chemistry scripts) to query, manipulate, and orchestrate the entire chemistry catalog, vector embedding manifold, archetype clustering engine, and multi-stage LLM synthesis pipelines.
 
 ---
 
