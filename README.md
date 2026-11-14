@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/logo.jpg" alt="Chemist Logo" width="400" />
+  <img src="docs/images/logo.jpg" alt="Chemist Logo" width="600" />
 </p>
 
 # Chemist: A Computational Laboratory for Comparative Chemistry, Molecular Structures, and Functional Group Manifolds
